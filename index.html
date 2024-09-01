@@ -1,11 +1,609 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>리디렉션 중...</title>
-    <meta http-equiv="refresh" content="0;url=https://script.google.com/macros/s/AKfycbzayw38HcTYr6s-Vc-3HPycsk7PrUVwhUP5gB6nM4geYHQYIriink7m5hHG4KuDl1487Q/exec">
+  <meta name="viewport" content="width=600, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <base target="_top">
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+    color: #333;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  h3 {
+    color: #475569;
+  }
+
+  form, .container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  input[type="text"], input[type="number"], select {
+    padding: 15px; /* 입력창을 크게 설정 */
+    margin: 10px 0; /* 간격 조정 */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px; /* 폰트 크기 증가 */
+  }
+
+  button {
+    background-color: #475569;
+    color: #fff;
+    padding: 15px 25px; /* 버튼 크기 증가 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  button:hover {
+    background-color: #4a5568;
+  }
+
+  #dealSearchWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap; 
+  }
+
+  #dealSearchWrapper label {
+    flex: 0 0 auto;
+    margin-right: 10px; 
+  }
+
+  #dealSearch {
+    flex: 1;
+    min-width: 100px;
+    margin-right: 10px;
+  }
+
+  #dealSearchWrapper button {
+    margin-top: 0;
+    padding: 15px 20px;
+    line-height: normal;
+    vertical-align: middle;
+  }
+
+  #dealResults {
+    list-style: none;
+    padding: 0;
+  }
+
+  #dealResults li {
+    background-color: #e2e8f0;
+    padding: 15px;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #dealResults li:hover {
+    background-color: #cbd5e1;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .selected-item {
+    margin-bottom: 10px;
+    background-color: #e2e8f0;
+    padding: 15px;
+    border-radius: 5px;
+  }
+
+  /* 미디어 쿼리 추가: 모바일 환경 대응 */
+  @media (max-width: 600px) {
+    body {
+      padding: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 18px; /* 기본 폰트 크기 증가 */
+    }
+
+    form, .container {
+      padding: 20px;
+      max-width: 100%;
+    }
+
+    input[type="text"], input[type="number"], select {
+      padding: 15px; /* 입력창을 크게 설정 */
+      font-size: 18px; /* 폰트 크기 증가 */
+    }
+
+    button {
+      padding: 15px 25px; /* 버튼 크기 증가 */
+      font-size: 18px; /* 버튼 폰트 크기 증가 */
+    }
+
+    h3 {
+      font-size: 20px; /* 제목 크기 증가 */
+    }
+
+    #dealSearchWrapper {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    #dealSearchWrapper button {
+      margin-left: 0;
+      margin-top: 5px;
+    }
+
+    th, td {
+      padding: 8px;
+      font-size: 18px;
+    }
+  }
+  </style>
 </head>
 <body>
-    <p> 리디렉션 중입니다...</p>
+  <div class="container" id="authForm">
+    <h3>사용자 로그인</h3>
+    ID: <input type="text" id="userId" required><br>
+    전화번호: <input type="text" id="userPhone" required><br>
+    <button type="button" onclick="authenticateUser()">로그인</button>
+  </div>
+
+  <div class="container hidden" id="userDetails">
+    <h3>사용자 정보</h3>
+    <p>이름: <span id="userNameDisplay"></span></p>
+    <p>소속팀: <span id="userTeamDisplay"></span></p>
+    <div id="dealSearchWrapper">
+      <label for="dealSearch">거래처 검색:</label>
+      <input type="text" id="dealSearch" required>
+      <button type="button" onclick="searchDealer()">검색</button>
+    </div>
+    <ul id="dealResults"></ul>
+    <div class="hidden" id="dealerDetails">
+      <p><span id="dealerInfo"></span></p>
+      주소: <input type="text" id="dealerAddress"><br>
+      전화번호: <input type="text" id="dealerPhone"><br>
+      <button type="button" onclick="goToItemSelection()">다음</button>
+    </div>
+  </div>
+
+<body>
+  <div class="container" id="authForm">
+    <h3>사용자 로그인</h3>
+    ID: <input type="text" id="userId" required><br>
+    전화번호: <input type="text" id="userPhone" required><br>
+    <button type="button" onclick="authenticateUser()">로그인</button>
+  </div>
+
+  <div class="container hidden" id="userDetails">
+    <h3>사용자 정보</h3>
+    <p>이름: <span id="userNameDisplay"></span></p>
+    <p>소속팀: <span id="userTeamDisplay"></span></p>
+    <div id="dealSearchWrapper">
+      <label for="dealSearch">거래처 검색:</label>
+      <input type="text" id="dealSearch" required>
+      <button type="button" onclick="searchDealer()">검색</button>
+    </div>
+    <ul id="dealResults"></ul>
+    <div class="hidden" id="dealerDetails">
+      <p><span id="dealerInfo"></span></p>
+      주소: <input type="text" id="dealerAddress"><br>
+      전화번호: <input type="text" id="dealerPhone"><br>
+      <button type="button" onclick="goToItemSelection()">다음</button>
+    </div>
+  </div>
+
+<body>
+  <div class="container" id="authForm">
+    <h3>사용자 로그인</h3>
+    ID: <input type="text" id="userId" required><br>
+    전화번호: <input type="text" id="userPhone" required><br>
+    <button type="button" onclick="authenticateUser()">로그인</button>
+  </div>
+
+  <div class="container hidden" id="userDetails">
+    <h3>사용자 정보</h3>
+    <p>이름: <span id="userNameDisplay"></span></p>
+    <p>소속팀: <span id="userTeamDisplay"></span></p>
+    <div id="dealSearchWrapper">
+      <label for="dealSearch">거래처 검색:</label>
+      <input type="text" id="dealSearch" required>
+      <button type="button" onclick="searchDealer()">검색</button>
+    </div>
+    <ul id="dealResults"></ul>
+    <div class="hidden" id="dealerDetails">
+      <p><span id="dealerInfo"></span></p>
+      주소: <input type="text" id="dealerAddress"><br>
+      전화번호: <input type="text" id="dealerPhone"><br>
+      <button type="button" onclick="goToItemSelection()">다음</button>
+    </div>
+  </div>
+
+  <body>
+    <div class="container" id="authForm">
+      <h3>사용자 로그인</h3>
+      ID: <input type="text" id="userId" required><br>
+      전화번호: <input type="text" id="userPhone" required><br>
+      <button type="button" onclick="authenticateUser()">로그인</button>
+    </div>
+  
+    <div class="container hidden" id="userDetails">
+      <h3>사용자 정보</h3>
+      <p>이름: <span id="userNameDisplay"></span></p>
+      <p>소속팀: <span id="userTeamDisplay"></span></p>
+      <div id="dealSearchWrapper">
+        <label for="dealSearch">거래처 검색:</label>
+        <input type="text" id="dealSearch" required>
+        <button type="button" onclick="searchDealer()">검색</button>
+      </div>
+      <ul id="dealResults"></ul>
+      <div class="hidden" id="dealerDetails">
+        <p><span id="dealerInfo"></span></p>
+        주소: <input type="text" id="dealerAddress"><br>
+        전화번호: <input type="text" id="dealerPhone"><br>
+        <button type="button" onclick="goToItemSelection()">다음</button>
+      </div>
+    </div>
+  
+    <div class="container hidden" id="itemSelection">
+      <h3>사용자 정보</h3>
+      <p>사용자: <span id="userSummary"></span></p>
+      <p>거래처: <span id="dealerSummary"></span></p>
+      
+      <h3>물품 신청</h3>
+      카테고리: <select id="categorySelect" onchange="loadProducts()"></select>
+      
+      <!-- 제품과 물품이 표시될 영역 -->
+      <div id="productContainer"></div>
+  
+      <button type="button" id="addItemButton" onclick="addNewItem()">물품 추가</button>
+      
+      <!-- 여기서부터 동적으로 추가되는 영역 -->
+      <div id="selectedItemsContainer" class="hidden">
+        <h4 id="selectedItemsTitle">신청 물품 수량 확인</h4>
+        <div id="selectedItems"></div>
+        <button type="button" id="submitApplicationButton" onclick="printApplication()">신청서 보내기</button>
+      </div>
+    </div>
+  
+    <div class="container hidden" id="confirmation">
+      <h3>물품 신청서를 담당자에게 보냈습니다</h3>
+      <h4>신청한 물품</h4>
+      <div id="confirmationItems"></div>
+      <p>감사합니다</p>
+      <button type="button" onclick="returnToHome()">물품신청페이지로 가기</button>
+    </div>
+  
+    <div id="result" class="hidden"></div>
+  
+    <script>
+      let currentUser = null;
+      let currentDealer = null;
+      let selectedItems = [];
+  
+      async function authenticateUser() {
+        const id = document.getElementById('userId').value;
+        const phone = document.getElementById('userPhone').value;
+  
+        try {
+          const response = await fetch('https://script.google.com/macros/s/AKfycbzayw38HcTYr6s-Vc-3HPycsk7PrUVwhUP5gB6nM4geYHQYIriink7m5hHG4KuDl1487Q/exec', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: 'authenticateUser', id, phone })
+          });
+          const user = await response.json();
+          if (user) {
+            currentUser = user;
+            document.getElementById('authForm').classList.add('hidden');
+            document.getElementById('userDetails').classList.remove('hidden');
+            document.getElementById('userNameDisplay').innerText = user.name;
+            document.getElementById('userTeamDisplay').innerText = user.team;
+          } else {
+            alert('직원확인이 불가능합니다.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          document.getElementById('result').innerText = 'Error: ' + error.message;
+        }
+      }
+  
+      function handleSearchKeypress(event) {
+        if (event.key === 'Enter') {
+          searchDealer();
+        }
+      }
+  
+      async function searchDealer() {
+        const query = document.getElementById('dealSearch').value;
+        if (query.length >= 2) {
+          try {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbzayw38HcTYr6s-Vc-3HPycsk7PrUVwhUP5gB6nM4geYHQYIriink7m5hHG4KuDl1487Q/exec', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ action: 'searchDealer', query, userTeam: currentUser.team })
+            });
+            const dealers = await response.json();
+            onDealerSearch(dealers);
+          } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('result').innerText = 'Error: ' + error.message;
+          }
+        } else {
+          alert('검색어는 두 글자 이상 입력해주세요.');
+        }
+      }
+  
+      function onDealerSearch(dealers) {
+        const resultContainer = document.getElementById('dealResults');
+        resultContainer.innerHTML = '';
+        if (dealers.length === 0) {
+          resultContainer.innerHTML = '<li>검색되는 거래처가 없습니다.</li>';
+        } else {
+          dealers.forEach(dealer => {
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>${dealer.name}</strong> (${dealer.code}) - ${dealer.address} - ${dealer.phone}`;
+            li.onclick = () => selectDealer(dealer);
+            resultContainer.appendChild(li);
+          });
+        }
+      }
+  
+      function selectDealer(dealer) {
+        currentDealer = dealer;
+        document.getElementById('dealSearchWrapper').classList.add('hidden');
+        document.getElementById('dealResults').classList.add('hidden');
+        document.getElementById('dealerDetails').classList.remove('hidden');
+        document.getElementById('dealerInfo').innerText = `${dealer.name} (${dealer.code})`;
+        document.getElementById('dealerAddress').value = dealer.address;
+        document.getElementById('dealerPhone').value = dealer.phone;
+      }
+  
+      function goToItemSelection() {
+        document.getElementById('userDetails').classList.add('hidden');
+        document.getElementById('itemSelection').classList.remove('hidden');
+        document.getElementById('userSummary').innerText = `${currentUser.name} (${currentUser.team})`;
+        document.getElementById('dealerSummary').innerText = `${currentDealer.name} (${currentDealer.code}) - ${currentDealer.address}`;
+        loadCategories();
+      }
+  
+      async function loadCategories() {
+        try {
+          const response = await fetch('https://script.google.com/macros/s/AKfycbzayw38HcTYr6s-Vc-3HPycsk7PrUVwhUP5gB6nM4geYHQYIriink7m5hHG4KuDl1487Q/exec', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: 'getCategories' })
+          });
+          const categories = await response.json();
+          const categorySelect = document.getElementById('categorySelect');
+          categorySelect.innerHTML = '<option value="">선택하세요</option>';
+          categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.innerText = category;
+            categorySelect.appendChild(option);
+          });
+        } catch (error) {
+          console.error('Error:', error);
+          document.getElementById('result').innerText = 'Error: ' + error.message;
+        }
+      }
+  
+      async function loadProducts() {
+        const category = document.getElementById('categorySelect').value;
+        if (!category) return;
+  
+        try {
+          const response = await fetch('https://script.google.com/macros/s/AKfycbzayw38HcTYr6s-Vc-3HPycsk7PrUVwhUP5gB6nM4geYHQYIriink7m5hHG4KuDl1487Q/exec', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: 'getProductsByCategory', category })
+          });
+          const products = await response.json();
+          displayProducts(products);
+        } catch (error) {
+          console.error('Error:', error);
+          document.getElementById('result').innerText = 'Error: ' + error.message;
+      }
+    }
+
+    function displayProducts(products) {
+      const productContainer = document.getElementById('productContainer');
+      productContainer.innerHTML = ''; // 기존 내용 초기화
+
+      products.forEach(product => {
+        const productDiv = document.createElement('div');
+        productDiv.style.marginBottom = '20px';
+
+        const productTitle = document.createElement('div');
+        productTitle.innerText = product.productName;
+        productTitle.style.fontWeight = 'bold';
+        productTitle.style.marginBottom = '10px';
+        productTitle.style.backgroundColor = '#f0f0f0';
+        productTitle.style.padding = '8px';
+        productTitle.style.border = '1px solid #ccc';
+        productDiv.appendChild(productTitle);
+
+        const itemContainer = document.createElement('div');
+        itemContainer.style.display = 'flex';
+        itemContainer.style.flexWrap = 'wrap';
+
+        product.items.forEach((item, index) => {
+          const itemDiv = document.createElement('div');
+          itemDiv.style.width = '18%';  // 크기 조정
+          itemDiv.style.marginBottom = '10px';
+          itemDiv.style.marginRight = '2%';  // 간격 확보
+
+          const itemLabel = document.createElement('label');
+          itemLabel.innerText = item.itemName;
+          itemLabel.style.display = 'block';
+          itemLabel.style.marginBottom = '5px';
+          itemLabel.style.textAlign = 'center';
+
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.placeholder = item.available === 'F' ? '재고없음' : '수량';
+          input.disabled = item.available === 'F';
+          input.style.width = '100%';
+          input.style.border = '1px solid #99ccff';  // 테두리 색상 설정
+          input.style.padding = '5px';  // 입력창 내 여백 설정
+          input.style.boxSizing = 'border-box';  // 박스 크기 조정
+
+          // 추가된 부분: dataset 속성
+          input.dataset.productName = product.productName;
+          input.dataset.itemName = item.itemName;
+
+          itemDiv.appendChild(itemLabel);
+          itemDiv.appendChild(input);
+          itemContainer.appendChild(itemDiv);
+
+          if ((index + 1) % 5 === 0) {
+            itemContainer.appendChild(document.createElement('br'));
+          }
+        });
+
+        productDiv.appendChild(itemContainer);
+        productContainer.appendChild(productDiv);
+      });
+
+      document.getElementById('addItemButton').classList.remove('hidden');
+    }
+
+    function addNewItem() {
+      const category = document.getElementById('categorySelect').value;
+      const inputs = document.querySelectorAll('#productContainer input');
+
+      let itemAdded = false;  // 물품이 추가되었는지 확인
+
+      inputs.forEach(input => {
+        const quantity = input.value;
+        if (quantity > 0 && !input.disabled) {
+          selectedItems.push({
+            category: category,
+            product: input.dataset.productName,
+            item: input.dataset.itemName,
+            quantity: quantity
+          });
+          itemAdded = true;  // 물품이 추가됨
+        }
+      });
+
+      if (itemAdded) {
+        displaySelectedItems();
+        clearSelections();
+      } else {
+        alert("신청된 물품이 없습니다");  // 팝업 메시지
+      }
+    }
+
+    function displaySelectedItems() {
+      const selectedItemsContainer = document.getElementById('selectedItems');
+      const selectedItemsWrapper = document.getElementById('selectedItemsContainer');
+      selectedItemsContainer.innerHTML = '';
+      if (selectedItems.length > 0) {
+        selectedItemsWrapper.classList.remove('hidden');
+        selectedItems.forEach(item => {
+          const div = document.createElement('div');
+          div.classList.add('selected-item');
+          div.innerText = `${item.category} - ${item.product}: ${item.item} 수량: ${item.quantity}`;
+          selectedItemsContainer.appendChild(div);
+        });
+      } else {
+        selectedItemsWrapper.classList.add('hidden');
+      }
+    }
+
+    function clearSelections() {
+      document.getElementById('categorySelect').value = '';
+      document.getElementById('productContainer').innerHTML = '';  // ID 수정
+      document.getElementById('addItemButton').classList.add('hidden');
+    }
+
+    async function printApplication() {
+      const dealerAddress = document.getElementById('dealerAddress').value;
+      const dealerPhone = document.getElementById('dealerPhone').value;
+      const application = {
+        user: currentUser,
+        dealer: { ...currentDealer, address: dealerAddress, phone: dealerPhone },
+        items: selectedItems,
+        date: new Date().toLocaleString()
+      };
+
+      try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbzayw38HcTYr6s-Vc-3HPycsk7PrUVwhUP5gB6nM4geYHQYIriink7m5hHG4KuDl1487Q/exec', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ action: 'submitApplication', application })
+        });
+        const result = await response.text();
+        onApplicationSuccess(result);
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('result').innerText = 'Error: ' + error.message;
+      }
+    }
+
+    function onApplicationSuccess(response) {
+      document.getElementById('itemSelection').classList.add('hidden');
+      document.getElementById('confirmation').classList.remove('hidden');
+
+      // 신청한 물품들을 보여줌
+      const confirmationItemsContainer = document.getElementById('confirmationItems');
+      confirmationItemsContainer.innerHTML = '';
+      selectedItems.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('selected-item');
+        div.innerText = `${item.category} - ${item.product}: ${item.item} 수량: ${item.quantity}`;
+        confirmationItemsContainer.appendChild(div);
+      });
+    }
+
+    function returnToHome() {
+      // 선택된 물품 목록 초기화
+      selectedItems = [];
+
+      // 모든 입력 필드 초기화
+      document.getElementById('userId').value = '';
+      document.getElementById('userPhone').value = '';
+      document.getElementById('dealSearch').value = '';
+      document.getElementById('dealResults').innerHTML = '';
+      document.getElementById('dealerAddress').value = '';
+      document.getElementById('dealerPhone').value = '';
+      document.getElementById('productContainer').innerHTML = '';
+      document.getElementById('selectedItems').innerHTML = '';
+
+      // UI 상태 초기화
+      document.getElementById('authForm').classList.remove('hidden');
+      document.getElementById('userDetails').classList.add('hidden');
+      document.getElementById('dealerDetails').classList.add('hidden');
+      document.getElementById('itemSelection').classList.add('hidden');
+      document.getElementById('confirmation').classList.add('hidden');
+
+      // 버튼 및 기타 요소 초기화
+      document.getElementById('addItemButton').classList.add('hidden');
+      document.getElementById('selectedItemsContainer').classList.add('hidden');
+    }
+
+    // 키 입력 시 검색 기능 발동
+    document.getElementById('dealSearch').addEventListener('keypress', handleSearchKeypress);
+  </script>
 </body>
-</html>
 </html>
